@@ -2,5 +2,5 @@ server {
   listen <%= _port %> <%= "default_server" if _default_server %>;
   server_name <%= title %>;
   root <%= _root %>;
-  include <%= _confdir %>/config.d/*.conf;
+  include <%= __local_confpath %>/*.conf;
 }
