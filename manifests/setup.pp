@@ -1,7 +1,7 @@
 # Class: nginx::setup
 #
 #
-class nginx::setup {
+class nginx::setup( $common_binroot, $common_buildroot, $common_dataroot ) {
 
   require build-essential
   
@@ -11,11 +11,11 @@ class nginx::setup {
   
   # create global directories
   file { instance_basepath:
-    path => hiera('nginx_common_binroot'),
+    path => $common_binroot,
     ensure => directory,
   }
   file { server_basepath:
-    path => hiera('nginx_common_dataroot'),
+    path => $common_dataroot,
     ensure => directory,
   }
 }

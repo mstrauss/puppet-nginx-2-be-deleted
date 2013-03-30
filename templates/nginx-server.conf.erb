@@ -1,6 +1,7 @@
+include  <%= __local_confpath %>/nginx_http*.conf;
 server {
   listen <%= _port %> <%= "default_server" if _default_server %>;
   server_name <%= title %>;
   root <%= _root %>;
-  include <%= __local_confpath %>/*.conf;
+  include <%= __local_confpath %>/nginx_server*.conf;
 }

@@ -17,9 +17,9 @@ Example Hiera Configuration
 ---------------------------
 
     ---
-    nginx_common_binroot: /opt/nginx
-    nginx_common_buildroot: /var/cache/nginx
-    nginx_common_dataroot: /var/www/nginx
+    nginx::setup::common_binroot: /opt/nginx
+    nginx::setup::common_buildroot: /var/cache/nginx
+    nginx::setup::common_dataroot: /var/www/nginx
     nginx_instances:
       port80:
         version: 1.2.7

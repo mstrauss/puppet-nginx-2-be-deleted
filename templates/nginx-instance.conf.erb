@@ -9,4 +9,6 @@ http {
     keepalive_timeout  65;
     
     include       <%= __vhost_config_path %>/*.conf;
+    
+    server_tokens off;
 }

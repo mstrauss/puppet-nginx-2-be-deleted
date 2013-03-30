@@ -1,14 +1,14 @@
 # Class: nginx
 #
 #
-class nginx {
+class nginx( $instances, $servers ) {
   
   require setup
   
   # binaries
-  create_resources(nginx::instance, hiera('nginx_instances'))
+  create_resources( nginx::instance, $instances )
   
   # vHosts aka Servers
-  create_resources("@nginx::server", hiera("nginx_servers"))
+  create_resources( "@nginx::server", $servers )
   
 }

@@ -14,7 +14,6 @@ define nginx::instance(
   $version,
   $buildroot = undef,
   $binroot   = undef,
-  # $dataroot  = undef,
   $user,
   $group,
   $ensure = present
@@ -29,10 +28,9 @@ define nginx::instance(
   # Parameter mangling #
   ######################
   
-  $_instance_name   = "${title}-${version}"
-  $_common_binroot  = hiera('nginx_common_binroot')
-  $_common_buildroot  = hiera('nginx_common_buildroot')
-  # $_common_dataroot = hiera('nginx_common_dataroot')
+  $_instance_name    = "${title}-${version}"
+  $_common_binroot   = $nginx::setup::common_binroot
+  $_common_buildroot = $nginx::setup::common_buildroot
   
   if( $binroot == undef ) {
     $_binroot = "${_common_binroot}/${_instance_name}"
@@ -45,12 +43,6 @@ define nginx::instance(
   } else {
     $_buildroot = $buildroot
   }
-  
-  # if( $dataroot == undef ) {
-  #   $_dataroot = "${_common_dataroot}/${_instance_name}"
-  # } else {
-  #   $_dataroot = $dataroot
-  # }
   
   ######################
   # Internal variables #
@@ -90,12 +82,23 @@ define nginx::instance(
   Exec[$__compile] -> File[$__vhost_config_path]
   
   file { "${__confpath}/nginx.conf":
-    content => template( 'nginx/nginx-instance.conf.erb' )
+    content => template( 'nginx/nginx-instance.conf.erb' ),
+    notify  => Exec["nginx-reload-${title}"],
   }
   Exec[$__compile] -> File["${__confpath}/nginx.conf"]
   
   # collect all vhost/server definitions
   Server <| instance == $title |> {
-    confdir => $__vhost_config_path
+    confdir => $__vhost_config_path,
   }
+  
+  ######################
+  # Service Management #
+  ######################
+  
+  exec { "nginx-reload-${title}":
+    refreshonly => true,
+    command     => "${__compile_creates} -s reload"
+  }
+  
 }
